@@ -13,4 +13,4 @@ export default async function PostDetailPage({ params }) {
             <h1>Yazı Başlığı</h1>
         </div>
     )
-}
+} f
