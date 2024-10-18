@@ -2,9 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 
 export async function updateSession(request) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  let supabaseResponse = NextResponse.next();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -12,23 +10,24 @@ export async function updateSession(request) {
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll()
+          return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options); // SupabaseResponse'a ekle
+          });
         },
       },
     }
-  )
+  );
 
-  // refreshing the auth token
-  await supabase.auth.getUser()
+  try {
+    // Refreshing the auth token
+    await supabase.auth.getUser();
+  } catch (error) {
+    console.error('Error refreshing auth token:', error);
+    // Gerekirse hatayı yönlendir veya başka bir şey yap
+  }
 
-  return supabaseResponse
+  return supabaseResponse;
 }
