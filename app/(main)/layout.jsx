@@ -1,8 +1,9 @@
 export default function MainLayout({ children }) {
 
-    return
+    return (
     <div>
         {children}
     </div>
+    )
 
 }
